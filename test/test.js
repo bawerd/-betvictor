@@ -7,7 +7,7 @@ const server = require('../server');
 
 describe('Interview Task - Software Engineer-NodeJs', function() {
   before(function() {
-    server();
+    server(200);
   });
 
   it('should list all sports', function(done) {
