@@ -1,17 +1,33 @@
 #!/usr/bin/env node
-var opts = {
-  port: 3000
+const http = require('http');
+const url = require('url');
+const path = require('path');
+
+const opts = {
+  port: 3000,
+  host: 'localhost'
 }
 
-var app = module.exports = (port) => {
-  app.start(port);
-}
+const app = require('./lib/express-server');
+const server = http.createServer(app);
 
-app.start = async (port) => {
-  console.log(`Heeelo ${port}`);
+app.start = (options) => {
+  Object.assign(opts, options);
+
+  server.listen(opts, (e) => {
+    console.debug(`API server listening on port http://${opts.host}:${opts.port}`)
+  });
 };
+
+app.stop = () => {
+  server.close();
+}
 
 // Command line
 if(process.argv[1].includes('server.js')) {
-  app(opts.port);
+  opts.port = process.argv[2] || opts.port;
+  app.start(opts);
 }
+
+
+module.exports = app;

@@ -1,21 +1,33 @@
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
+const request = require('supertest');
+const should = chai.should();
 
 chai.use(chaiAsPromised);
 
-const server = require('../server');
+
+const app = require('../server');
 
 describe('Interview Task - Software Engineer-NodeJs', function() {
-  before(function() {
-    server(200);
+  before(() => {
+    app.start({port:8000});
   });
 
-  it('should list all sports', function(done) {
-    done();
+  after(() => {
+    app.stop();
   });
 
-  it('should list all events for a given sport', function(done) {
-    done();
+  it('should list all sports', (done) => {
+
+    request(app)
+      .get('/')
+      .set('Accept', 'application/json')
+      .expect(200, {}, done);
+
+  });
+
+  it('should list all events for a given sport', function() {
+
   });
   it('should list all data for a given event', function(done) {
     done();
