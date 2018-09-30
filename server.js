@@ -9,13 +9,17 @@ const opts = {
 };
 
 const app = require('./lib/express-server');
+const appStartedAsCli = process.argv[1].includes('server.js');
 
 const server = http.createServer(app);
 
 app.start = (options) => {
   Object.assign(opts, options);
-
-  server.listen(opts);
+  return server.listen(opts, () => {
+    if(appStartedAsCli) {
+      console.log(`Server started at http://${opts.host}:${opts.port}/`)
+    }
+  });
 };
 
 app.stop = () => {
@@ -23,8 +27,8 @@ app.stop = () => {
 }
 
 // Command line
-if(process.argv[1].includes('server.js')) {
-  opts.port = process.argv[2] || opts.port;
+if(appStartedAsCli) {
+  opts.port = opts.port;
   app.start(opts);
 }
 

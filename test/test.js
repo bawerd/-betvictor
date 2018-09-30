@@ -1,14 +1,13 @@
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const request = require('supertest');
 const betvictor = require('../lib/betvictor');
-const should = chai.should();
 const assert = chai.assert;
 
 chai.use(chaiAsPromised);
 
-
 const app = require('../server');
+const helpData = {};
 
 describe('Interview Task - Software Engineer-NodeJs', function() {
   before(() => {
@@ -22,7 +21,8 @@ describe('Interview Task - Software Engineer-NodeJs', function() {
   describe('Bet Victor proxy', function() {
     it('should sucessfully load data', function(done) {
       betvictor.getSports().then((data) => {
-        console.log("GOT DATA", data);
+        assert.exists(data.sports);
+        helpData.sports = data.sports;
         done();
       });
     });
