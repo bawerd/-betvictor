@@ -6,17 +6,16 @@ const path = require('path');
 const opts = {
   port: 3000,
   host: 'localhost'
-}
+};
 
 const app = require('./lib/express-server');
+
 const server = http.createServer(app);
 
 app.start = (options) => {
   Object.assign(opts, options);
 
-  server.listen(opts, (e) => {
-    console.debug(`API server listening on port http://${opts.host}:${opts.port}`)
-  });
+  server.listen(opts);
 };
 
 app.stop = () => {
