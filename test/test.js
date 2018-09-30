@@ -22,7 +22,7 @@ describe('Interview Task - Software Engineer-NodeJs', function() {
     it('should sucessfully load data', function(done) {
       betvictor.getSports().then((data) => {
         assert.exists(data.sports);
-        helpData.sports = data.sports;
+        helpData.en = data;
         done();
       });
     });
@@ -34,7 +34,7 @@ describe('Interview Task - Software Engineer-NodeJs', function() {
       request(app)
         .get('/')
         .set('Accept', 'application/json')
-        .expect(200, {}, done);
+        .expect(200, helpData.en.sports, done);
 
     });
 
