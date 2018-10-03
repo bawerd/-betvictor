@@ -1,10 +1,9 @@
 const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 const request = require('supertest');
 const betvictor = require('../lib/betvictor');
+const _ = require('lodash');
 const assert = chai.assert;
 
-chai.use(chaiAsPromised);
 
 const app = require('../server');
 const helpData = {};
@@ -19,14 +18,26 @@ describe('Interview Task - Software Engineer-NodeJs', function() {
   });
 
   describe('Bet Victor proxy', function() {
-    it('should sucessfully load data', function(done) {
-      betvictor.getSports().then((data) => {
-        assert.exists(data);
-        assert.equal(data[0].id, 100);
-        helpData.en = { sports: data }
+    it('should sucessfully load data', function() {
 
-        done();
-      });
+      return Promise.all([
+        betvictor.getSports('en').then((data) => {
+          assert.exists(data);
+          assert.equal(data[0].id, 100);
+          helpData.en = { sports: data }
+        }),
+        betvictor.getSports('de').then((data) => {
+          assert.exists(data);
+          assert.equal(data[0].id, 100);
+          helpData.de = { sports: data }
+        }),
+        betvictor.getSports('zh').then((data) => {
+          assert.exists(data);
+          assert.equal(data[0].id, 100);
+          helpData.zh = { sports: data }
+        })
+      ]);
+
     });
   });
 
@@ -41,17 +52,40 @@ describe('Interview Task - Software Engineer-NodeJs', function() {
     });
 
     it('should list all events for a given sport', function(done) {
+      const sport_id = 600;
 
       request(app)
-        .get('/sports/600')
+        .get( `/sports/${sport_id}/events`)
         .set('Accept', 'application/json')
-        .expect(200, helpData.en.sports, done);
+        .expect(200, _.find(helpData.en.sports, { id: sport_id }).events, done);
 
     });
 
     it('should list all data for a given event');
-    it('should list all sports in all languages');
+
+    it('should list all sports in all languages', function() {
+      const sport_id = 600;
+
+      return Promise.all([
+        request(app)
+        .get( `/en/sports/${sport_id}`)
+        .set('Accept', 'application/json')
+        .expect(200, _.find(helpData.en.sports, { id: sport_id })),
+
+        request(app)
+        .get( `/de/sports/${sport_id}`)
+        .set('Accept', 'application/json')
+        .expect(200, _.find(helpData.de.sports, { id: sport_id })),
+
+        request(app)
+        .get( `/zh/sports/${sport_id}`)
+        .set('Accept', 'application/json')
+        .expect(200, _.find(helpData.zh.sports, { id: sport_id }))
+      ]);
+
+    });
     it('should have language support (English, German and Chinese) * Caching');
+
     it('should have full test coverage');
   });
 
