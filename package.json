@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "express": "^4.16.3",
+    "lodash": "^4.17.11",
     "memory-cache": "^0.2.0",
     "morgan": "^1.9.1"
   }

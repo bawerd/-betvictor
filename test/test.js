@@ -21,8 +21,10 @@ describe('Interview Task - Software Engineer-NodeJs', function() {
   describe('Bet Victor proxy', function() {
     it('should sucessfully load data', function(done) {
       betvictor.getSports().then((data) => {
-        assert.exists(data.sports);
-        helpData.en = data;
+        assert.exists(data);
+        assert.equal(data[0].id, 100);
+        helpData.en = { sports: data }
+
         done();
       });
     });
@@ -38,7 +40,15 @@ describe('Interview Task - Software Engineer-NodeJs', function() {
 
     });
 
-    it('should list all events for a given sport');
+    it('should list all events for a given sport', function(done) {
+
+      request(app)
+        .get('/sports/600')
+        .set('Accept', 'application/json')
+        .expect(200, helpData.en.sports, done);
+
+    });
+
     it('should list all data for a given event');
     it('should list all sports in all languages');
     it('should have language support (English, German and Chinese) * Caching');
