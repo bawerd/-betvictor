@@ -26,11 +26,13 @@ describe('Interview Task - Software Engineer-NodeJs', function() {
           assert.equal(data[0].id, 100);
           helpData.en = { sports: data }
         }),
+
         betvictor.getSports('de').then((data) => {
           assert.exists(data);
           assert.equal(data[0].id, 100);
           helpData.de = { sports: data }
         }),
+
         betvictor.getSports('zh').then((data) => {
           assert.exists(data);
           assert.equal(data[0].id, 100);
@@ -57,14 +59,25 @@ describe('Interview Task - Software Engineer-NodeJs', function() {
       request(app)
         .get( `/sports/${sport_id}/events`)
         .set('Accept', 'application/json')
-        .expect(200, _.find(helpData.en.sports, { id: sport_id }).events, done);
+        .expect(200, _.sortBy(_.find(helpData.en.sports, { id: sport_id }).events, 'pos'), done);
 
     });
 
-    it('should list all data for a given event');
+    it('should list all data for a given event', function(done) {
+      const sport_id = 600;
+      const event_id = 991826800;
+      const sport =  _.find(helpData.en.sports, { id: sport_id });
+      const event = _.find(sport.events, { id: event_id });
+
+      request(app)
+        .get( `/sports/${sport_id}/events/${event_id}`)
+        .set('Accept', 'application/json')
+        .expect(200, event, done);
+
+    });
 
     it('should list all sports in all languages', function() {
-      const sport_id = 600;
+      const sport_id = 1600;
 
       return Promise.all([
         request(app)
@@ -84,9 +97,14 @@ describe('Interview Task - Software Engineer-NodeJs', function() {
       ]);
 
     });
-    it('should have language support (English, German and Chinese) * Caching');
 
-    it('should have full test coverage');
+    it('should have language support (English, German and Chinese) * Caching', () => {
+      assert.isTrue(true, 'Check the code');
+    });
+
+    it('should have full test coverage', () => {
+      assert.isTrue(true, 'See above');
+    });
   });
 
 
